@@ -1,20 +1,16 @@
 FROM ubuntu:20.04
 
-# Install dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && \
+    apt-get install -y \
     curl \
     gnupg \
-    apt-transport-https \
-    ca-certificates \
+    lsb-release \
     git
 
-# Install kubectl
-RUN curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
-    echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list && \
-    apt-get update && \
-    apt-get install -y kubectl
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+    chmod +x ./kubectl && \
+    mv ./kubectl /usr/local/bin/kubectl
 
-# Verify installations
-RUN kubectl version --client && git --version
+RUN kubectl version --client
 
-CMD ["bash"]
+ENTRYPOINT ["bash"]
