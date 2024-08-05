@@ -1,4 +1,4 @@
-
+def buildNumber = currentBuild.number
 pipeline {
     agent {
             kubernetes {
@@ -80,7 +80,8 @@ spec:
                 container("docker") {
                     script {
                         sh """
-						docker push ranjana061/kubectl-git-repo:latest
+                                             docker tag mydocker ranjana061/kubectl-git-repo:mydocker-$buildNumber
+						docker push ranjana061/kubectl-git-repo:mydocker-$buildNumber
 						
                         """
                     }
