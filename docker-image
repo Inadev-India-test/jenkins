@@ -1,0 +1,25 @@
+# Step 1: Create the Dockerfile
+echo 'FROM ubuntu:20.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    apt-transport-https \
+    gnupg \
+    && rm -rf /var/lib/apt/lists/*
+RUN curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
+    && echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list \
+    && apt-get update \
+    && apt-get install -y kubectl \
+    && rm -rf /var/lib/apt/lists/*
+RUN git --version && kubectl version --client
+ENTRYPOINT ["/bin/bash"]' > Dockerfile
+
+# Step 2: Build the Docker image
+docker build -t ranjana.trivedi9@gmail.com/kubectl-git:latest .
+
+# Step 3: Log in to Docker Hub
+docker login
+
+# Step 4: Push the Docker image to Docker Hub
+docker push ranjana.trivedi9@gmail.com/kubectl-git:latest
