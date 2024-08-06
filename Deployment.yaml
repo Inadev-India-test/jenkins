@@ -13,7 +13,7 @@ spec:
         app: my-app
     spec:
       containers:
-      - name: my-app-ranjana
+      - name: my-app-container
         image: ranjana061/my-kubectl-image:latest
         ports:
         - containerPort: 80
