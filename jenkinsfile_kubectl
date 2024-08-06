@@ -39,7 +39,7 @@ spec:
     }
 
     environment {
-        DOCKER_IMAGE = 'ranjana061/my-kubectl-image:latest'
+        DOCKER_IMAGE = 'ranjana061/my-kubectl-image'
     }
 
     stages {
