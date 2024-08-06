@@ -29,12 +29,12 @@ spec:
     stages {
         stage ('docker hub login') {
             steps {
-			  withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'password', usernameVariable: 'uname')]) {
-                    // sh 'docker login -u $uname -p $password'
+			  withCredentials([usernamePassword(credentialsId: 'Docker-hub-creds', passwordVariable: 'password', usernameVariable: 'username')]) {
+                    // sh 'docker login -u $username -p $password'
                     container("docker") {
                     script {
                         sh """
-                        docker login -u $uname -p $password
+                        docker login -u $username -p $password
                         """
                     }
                 }
