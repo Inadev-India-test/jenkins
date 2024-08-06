@@ -1,3 +1,4 @@
+def buildNumber = currentBuild.number
 pipeline {
     agent {
         kubernetes {
@@ -26,7 +27,7 @@ spec:
     - mountPath: /var/run/docker.sock
       name: docker-sock
   - name: kubectl
-    image: ranjana061/my-kubectl-image:latest
+    image: bitnami/kubectl:latest
     imagePullPolicy: IfNotPresent
     command:
     - cat
@@ -37,19 +38,22 @@ spec:
 """
         }
     }
- 
+
+    environment {
+        DOCKER_IMAGE = 'ranjana061/my-kubectl-image'
+    }
+
     stages {
         stage('Clone Repository') {
             steps {
                 git url: 'https://github.com/pragatizone/jenkins.git', branch: 'main'
             }
         }
- 
         stage('Deploy to Kubernetes') {
             steps {
                 container('kubectl') {
                     script {
-                        sh 'kubectl apply -f Deployment.yaml'
+                        sh "kubectl apply -f Deployment.yaml"
                     }
                 }
             }
