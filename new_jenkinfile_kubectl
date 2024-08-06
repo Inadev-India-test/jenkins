@@ -1,4 +1,3 @@
-def buildNumber = currentBuild.number
 pipeline {
     agent {
         kubernetes {
