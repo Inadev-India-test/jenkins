@@ -26,7 +26,7 @@ spec:
     - mountPath: /var/run/docker.sock
       name: docker-sock
   - name: kubectl
-    image: ranjana061/my-kubectl-image:latest
+    image: ranjana061/my-kubectl-image
     imagePullPolicy: IfNotPresent
     command:
     - cat
