@@ -1,14 +1,14 @@
+def buildNumber = currentBuild.number
 pipeline {
     agent {
-        kubernetes {
+            kubernetes {
             defaultContainer 'jnlp'
             yaml """
 apiVersion: v1
 kind: Pod
 metadata:
-  name: jenkin
+  name: jenkins
 spec:
-  serviceAccountName: admin-sa
   volumes:
     - name: docker-sock
       hostPath:
@@ -26,7 +26,7 @@ spec:
     - mountPath: /var/run/docker.sock
       name: docker-sock
   - name: kubectl
-    image: ranjana061/my-kubectl-image
+    image: bitnami/kubectl:latest
     imagePullPolicy: IfNotPresent
     command:
     - cat
@@ -38,22 +38,63 @@ spec:
         }
     }
 
+    environment {
+        DOCKER_IMAGE = 'ranjana061/my-kubectl-image'
+    }
+
     stages {
-        stage('Clone Repository') {
+		
+        stage('Checkout') {
             steps {
-                 git url: 'https://github.com/pragatizone/jenkins.git', branch: 'main'
+                git url: 'https://github.com/pragatizone/jenkins.git', branch: 'main'
             }
         }
 
-        stage('Deploy to Kubernetes') {
+         stage ('docker hub login') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'Docker-hub-creds', passwordVariable: 'password', usernameVariable: 'username')]) {
+                    // sh 'docker login -u $username -p $password'
+                    container("docker") {
+                    script {
+                        sh """
+                        docker login -u $username -p $password
+                        """
+                    }
+                }
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                container('docker') {
+                    script {
+                        sh "docker build -t ${DOCKER_IMAGE} ."
+                    }
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                container("docker") {
+                    script {
+                        sh """
+						docker tag ${DOCKER_IMAGE} ranjana061/kubectl-git-repo:my-kubectl-image-$buildNumber
+						docker push ranjana061/kubectl-git-repo:my-kubectl-image-$buildNumber
+						
+                        """
+                    }
+                }
+            }
+       }
+stage('Deploy to Kubernetes') {
             steps {
                 container('kubectl') {
                     script {
-                
                         sh 'kubectl apply -f Deployment.yaml'
                     }
                 }
             }
         }
     }
-}
