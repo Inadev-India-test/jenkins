@@ -80,7 +80,7 @@ spec:
                 container("docker") {
                     script {
                         sh """
-						docker tag Rahul ranjana061/kubectl-git-repo/my-kubectl-image:latest
+						docker tag rahul ranjana061/kubectl-git-repo/my-kubectl-image:latest
 						docker push ranjana061/kubectl-git-repo/my-kubectl-image:latest
 						
                         """
