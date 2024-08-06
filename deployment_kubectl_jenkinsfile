@@ -6,7 +6,7 @@ pipeline {
 apiVersion: v1
 kind: Pod
 metadata:
-  name: jenkins
+  name: jenkin
 spec:
   serviceAccountName: admin-sa
   volumes:
