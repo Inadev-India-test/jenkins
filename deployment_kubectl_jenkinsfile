@@ -1,7 +1,7 @@
 def buildNumber = currentBuild.number
 pipeline {
     agent {
-            kubernetes {
+        kubernetes {
             defaultContainer 'jnlp'
             yaml """
 apiVersion: v1
@@ -9,7 +9,7 @@ kind: Pod
 metadata:
   name: jenkins
 spec:
- serviceAccountName: admin-sa
+  serviceAccountName: admin-sa
   volumes:
     - name: docker-sock
       hostPath:
@@ -44,24 +44,22 @@ spec:
     }
 
     stages {
-		
         stage('Checkout') {
             steps {
                 git url: 'https://github.com/pragatizone/jenkins.git', branch: 'main'
             }
         }
 
-         stage ('docker hub login') {
+        stage ('docker hub login') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'Docker-hub-creds', passwordVariable: 'password', usernameVariable: 'username')]) {
-                    // sh 'docker login -u $username -p $password'
                     container("docker") {
-                    script {
-                        sh """
-                        docker login -u $username -p $password
-                        """
+                        script {
+                            sh """
+                            docker login -u $username -p $password
+                            """
+                        }
                     }
-                }
                 }
             }
         }
@@ -81,19 +79,19 @@ spec:
                 container("docker") {
                     script {
                         sh """
-						docker tag ${DOCKER_IMAGE} ranjana061/kubectl-git-repo:my-kubectl-image-$buildNumber
-						docker push ranjana061/kubectl-git-repo:my-kubectl-image-$buildNumber
-						
+                        docker tag ${DOCKER_IMAGE} ranjana061/kubectl-git-repo:my-kubectl-image-$buildNumber
+                        docker push ranjana061/kubectl-git-repo:my-kubectl-image-$buildNumber
                         """
                     }
                 }
             }
-       }
-stage('Deploy to Kubernetes') {
+        }
+
+        stage('Deploy to Kubernetes') {
             steps {
                 container('kubectl') {
                     script {
-                        sh """kubectl apply -f Deployment.yaml"""
+                        sh "kubectl apply -f Deployment.yaml"
                     }
                 }
             }
