@@ -39,10 +39,6 @@ spec:
         }
     }
 
-    environment {
-        DOCKER_IMAGE = 'ranjana061/my-kubectl-image'
-    }
-
     stages {
         stage('Clone Repository') {
             steps {
