@@ -8,6 +8,7 @@ kind: Pod
 metadata:
   name: jenkins
 spec:
+ serviceAccountname: admin-sa
   volumes:
     - name: docker-sock
       hostPath:
