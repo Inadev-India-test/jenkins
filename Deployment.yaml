@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: Deployment-ranjana
+  name: my-app-ranjana
 spec:
   replicas: 2
   selector:
