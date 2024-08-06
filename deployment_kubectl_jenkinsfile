@@ -93,7 +93,7 @@ stage('Deploy to Kubernetes') {
             steps {
                 container('kubectl') {
                     script {
-                        sh 'kubectl apply -f Deployment.yaml'
+                        sh """kubectl apply -f Deployment.yaml"""
                     }
                 }
             }
