@@ -26,29 +26,25 @@ spec:
     - mountPath: /var/run/docker.sock
       name: docker-sock
   - name: kubectl
-    image: bitnami/kubectl:latest
+    image: ranjana061/kubectl-git-repo:my-kubectl-image-22
     imagePullPolicy: IfNotPresent
     command:
     - cat
     tty: true
-    volumeMounts:
-    - mountPath: /root/.kube
-      name: kube-config
 """
         }
     }
 
     stages {
-        stage('Clone Repository') {
-            steps {
-                git url: 'https://github.com/pragatizone/jenkins.git', branch: 'main'
-            }
-        }
         stage('Deploy to Kubernetes') {
             steps {
                 container('kubectl') {
                     script {
-                        sh "kubectl apply -f Deployment.yaml"
+                       sh """
+                        git clone https://github.com/pragatizone/jenkins.git
+                        cd jenkins
+                        kubectl apply -f Deployment.yaml
+                          """
                     }
                 }
             }
